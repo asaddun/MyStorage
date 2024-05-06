@@ -38,6 +38,9 @@ void loop() {
     downloadSketch();
   }
 
+  Serial.print("Current Version:");
+  Serial.println(currentVersion);
+
   // Your main code goes here
 }
 
