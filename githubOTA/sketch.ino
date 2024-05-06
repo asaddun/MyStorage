@@ -6,7 +6,7 @@
 const char* ssid = "API-HOTSPOT";
 const char* password = "nevergiveup";
 const char* versionUrl = "https://raw.githubusercontent.com/asaddun/MyStorage/main/githubOTA/version.txt";
-String currentVersion = "1.0";  // Change this to the version of your current sketch
+String currentVersion = "1.1";  // Change this to the version of your current sketch
 
 void setup() {
   Serial.begin(115200);
