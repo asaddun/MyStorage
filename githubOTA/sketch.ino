@@ -1,12 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <BearSSLHelpers.h>
+#include <CertStoreBearSSL.h>
+#include <WiFiClientSecureBearSSL.h>
 #include <ArduinoOTA.h>
 #include <FS.h>
 
 const char* ssid = "API-HOTSPOT";
 const char* password = "nevergiveup";
 const char* versionUrl = "https://raw.githubusercontent.com/asaddun/MyStorage/main/githubOTA/version.txt";
-String currentVersion = "1.1";  // Change this to the version of your current sketch
+String currentVersion = "1.0";  // Change this to the version of your current sketch
 
 void setup() {
   Serial.begin(115200);
@@ -27,6 +30,9 @@ void setup() {
 
   // Initialize OTA
   ArduinoOTA.begin();
+
+  // Initialize BearSSL
+  CertStoreBearSSL::initCertStore();
 }
 
 void loop() {
@@ -48,8 +54,10 @@ bool checkForUpdate() {
   Serial.println("Checking for update...");
 
   // Make HTTP request to download version file
+  WiFiClientSecure client;
+  BearSSL::WiFiClientSecure::setInsecure();
   HTTPClient http;
-  http.begin(versionUrl);
+  http.begin(client, versionUrl);
   int httpCode = http.GET();
   if (httpCode == HTTP_CODE_OK) {
     String latestVersion = http.getString();
@@ -74,8 +82,10 @@ void downloadSketch() {
   Serial.println("Downloading new sketch...");
 
   // Make HTTP request to download new sketch
+  WiFiClientSecure client;
+  BearSSL::WiFiClientSecure::setInsecure();
   HTTPClient http;
-  http.begin("https://raw.githubusercontent.com/asaddun/MyStorage/main/githubOTA/sketch.ino");
+  http.begin(client, "https://raw.githubusercontent.com/asaddun/MyStorage/main/githubOTA/sketch.ino");
   int httpCode = http.GET();
   if (httpCode == HTTP_CODE_OK) {
     // Save downloaded sketch to SPIFFS
